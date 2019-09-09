@@ -1,0 +1,19 @@
+{
+	"bucket_area_height" : 200.0,
+	"bucket_height" : 100.0,
+	"bucket_time" : 2.0,
+	"bucket_width" : 150.0,
+
+	"peg_radius": 20.0,
+	"peg_spacing_x" : 110.0,
+	"peg_spacing_y" : 110.0,
+	"peg_area_top" : 200.0,
+	"peg_area_bottom" : 200.0,
+
+	"puck_density" : 10.0,
+	"puck_friction" : 0.1,
+	"puck_restitution" : 0.7,
+	"puck_radius" : 30.0,
+
+	"placement_area_height" : 200.0
+}

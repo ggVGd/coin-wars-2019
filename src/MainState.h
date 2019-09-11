@@ -23,6 +23,8 @@ public:
 
 	void onEvent(const Cinnabar::EventBroker::Event*) override;
 	void onEvent(const CoinInsertEvent&);
+	void onEvent(const DepartmentSelectEvent&);
+	void onEvent(const DepartmentDeselectEvent&);
 	void onEvent(const PuckBucketEvent&);
 	void onEvent(const VideoEndEvent&);
 
@@ -32,6 +34,8 @@ public:
 
 private:
 	Board* _board;
+
+	std::string _department;
 
 	bool _placing = false;
 	glm::vec2 _placingPosition;

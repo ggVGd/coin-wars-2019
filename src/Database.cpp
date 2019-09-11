@@ -29,24 +29,24 @@ Database& Database::getSingleton()
 	static Database instance;
 	return instance;
 }
-void Database::createDepartment(const char* name)
+void Database::createDepartment(const std::string& name)
 {
-	_handleError(sqlite3_bind_text(_stmtCreateDepartment, 1, name, -1, SQLITE_TRANSIENT));
+	_handleError(sqlite3_bind_text(_stmtCreateDepartment, 1, name.c_str(), -1, SQLITE_TRANSIENT));
 	_handleError(sqlite3_step(_stmtCreateDepartment));
 	_handleError(sqlite3_reset(_stmtCreateDepartment));
 
 	_pointCacheValid = false;
 }
-void Database::givePoints(const char* department, int points)
+void Database::givePoints(const std::string& department, int points)
 {
-	_handleError(sqlite3_bind_text(_stmtGivePoints, 1, department, -1, SQLITE_TRANSIENT));
+	_handleError(sqlite3_bind_text(_stmtGivePoints, 1, department.c_str(), -1, SQLITE_TRANSIENT));
 	_handleError(sqlite3_bind_int(_stmtGivePoints, 2, points));
 	_handleError(sqlite3_step(_stmtGivePoints));
 	_handleError(sqlite3_reset(_stmtGivePoints));
 
 	_pointCacheValid = false;
 }
-std::vector<Database::DepartmentPoints> Database::getPoints()
+const std::vector<Database::DepartmentPoints>& Database::getPoints()
 {
 	if(!_pointCacheValid)
 	{
@@ -61,6 +61,16 @@ std::vector<Database::DepartmentPoints> Database::getPoints()
 		_pointCacheValid = true;
 	}
 	return _pointCache;
+}
+int Database::getPoints(const std::string& department)
+{
+	const auto& points = getPoints();
+	for(const auto& item : points)
+	{
+		if(item.department == department)
+			return item.points;
+	}
+	return 0;
 }
 void Database::_init()
 {

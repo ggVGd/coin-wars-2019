@@ -26,8 +26,8 @@ struct BodyData
 	CoinType coinType;
 };
 
-Board::Board(const Cinnabar::Vector2& size, Cinnabar::EventBroker& eventBroker)
-	: _size(size), _eventBroker(eventBroker), _physicsWorld(b2Vec2(0.0f, -10.0f))
+Board::Board(const Cinnabar::Vector2& size)
+	: _size(size), _physicsWorld(b2Vec2(0.0f, -10.0f))
 {
 	_sceneRenderer.setScene(&_scene);
 
@@ -40,6 +40,34 @@ Board::Board(const Cinnabar::Vector2& size, Cinnabar::EventBroker& eventBroker)
 	_placingPuckSprite->setTexture(_puckTexture);
 	_placingPuckSprite->setPosition(-1000, -1000);
 	_scene.sprites.push_back(_placingPuckSprite);
+}
+void Board::bind()
+{
+	Cinnabar::Core::getSingleton()->eventBroker().addObserver(this);
+	subscribe<DepartmentSelectEvent>();
+	subscribe<DepartmentDeselectEvent>();
+}
+void Board::unbind()
+{
+}
+void Board::onEvent(const Cinnabar::EventBroker::Event* event)
+{
+	if(event->is<DepartmentSelectEvent>())
+	{
+		onEvent(event->as<DepartmentSelectEvent>());
+	}
+	else if(event->is<DepartmentDeselectEvent>())
+	{
+		onEvent(event->as<DepartmentDeselectEvent>());
+	}
+}
+void Board::onEvent(const DepartmentSelectEvent& event)
+{
+	_department = event.department;
+}
+void Board::onEvent(const DepartmentDeselectEvent& event)
+{
+	_department.clear();
 }
 void Board::render(const glm::mat4& MVP)
 {
@@ -90,8 +118,8 @@ void Board::update(float elapsed)
 				_scene.removeSprite(bodyData->sprite);
 			}
 
-			_eventBroker.emit(PuckBucketEvent{
-				0,
+			Cinnabar::Core::getSingleton()->eventBroker().emit(PuckBucketEvent{
+				1,
 				bodyData->coinType
 			});
 

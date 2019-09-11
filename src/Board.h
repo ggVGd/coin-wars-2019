@@ -1,17 +1,21 @@
 #pragma once
 #include "Cinnabar/EventBroker.h"
-#include "Enumerations.h"
+#include "Events.h"
 #include "Scene.h"
 #include "SceneRenderer.h"
 #include <Box2D/Box2D.h>
 #include <SDL2/SDL_events.h>
 
-class Board
+class Board : Cinnabar::EventBroker::Observer
 {
 public:
-	Board(const Cinnabar::Vector2& size, Cinnabar::EventBroker&);
+	Board(const Cinnabar::Vector2& size);
 	void bind();
 	void unbind();
+
+	void onEvent(const Cinnabar::EventBroker::Event*) override;
+	void onEvent(const DepartmentSelectEvent&);
+	void onEvent(const DepartmentDeselectEvent&);
 
 	void render(const glm::mat4& MVP);
 	void update(float);
@@ -22,8 +26,9 @@ public:
 
 private:
 	const Cinnabar::Vector2 _size;
-	Cinnabar::EventBroker& _eventBroker;
 	b2World _physicsWorld;
+
+	std::string _department;
 
 	Scene _scene;
 	SceneRenderer _sceneRenderer;

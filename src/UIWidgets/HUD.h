@@ -6,7 +6,7 @@
 
 namespace UIWidgets
 {
-	class CoinQueue : public UIWidget, Cinnabar::EventBroker::Observer
+	class HUD : public UIWidget, Cinnabar::EventBroker::Observer
 	{
 	public:
 		void bind(Cinnabar::EventBroker&);
@@ -15,8 +15,11 @@ namespace UIWidgets
 		void onEvent(const Cinnabar::EventBroker::Event*) override;
 		void onEvent(const CoinInsertEvent&);
 		void onEvent(const CoinConsumeEvent&);
+		void onEvent(const DepartmentSelectEvent&);
+		void onEvent(const DepartmentDeselectEvent&);
 
 	private:
 		std::deque<CoinType> _coinQueue;
+		std::string _department;
 	};
 }

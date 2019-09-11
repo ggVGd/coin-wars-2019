@@ -1,12 +1,13 @@
-#include "MainState.h"
 #include "Cinnabar/Core.h"
-#include "Cinnabar/Sprite.h"
-#include "Cinnabar/RenderModule.h"
 #include "Cinnabar/InputModule.h"
+#include "Cinnabar/RenderModule.h"
+#include "Cinnabar/Sprite.h"
 #include "Cinnabar/Texture.h"
+#include "Database.h"
 #include "Events.h"
+#include "MainState.h"
 #include "Settings.h"
-#include "UIWidgets/CoinQueue.h"
+#include "UIWidgets/HUD.h"
 #include "UIWidgets/TeamPicker.h"
 #include <GL/gl.h>
 
@@ -19,12 +20,13 @@ void MainState::enter()
 {
 	core()->eventBroker().addObserver(this);
 	subscribe<CoinInsertEvent>();
-	//subscribe<DepartmentSelectEvent>();
+	subscribe<DepartmentSelectEvent>();
+	subscribe<DepartmentDeselectEvent>();
 	subscribe<PuckBucketEvent>();
 	subscribe<VideoEndEvent>();
 
 	auto render = core()->module<Cinnabar::RenderModule>();
-	_board = new Board(render->windowSize(), core()->eventBroker());
+	_board = new Board(render->windowSize());
 
 	auto input = core()->module<Cinnabar::InputModule>();
 	input->mousePressed.subscribe(this, std::bind(&MainState::mousePressed, this, std::placeholders::_1));
@@ -34,8 +36,8 @@ void MainState::enter()
 	auto nanovg = core()->module<Cinnabar::NanoVGModule>();
 	nanovg->setCanvas(&_ui);
 
-	auto coinQueueWidget = _ui.rootWidget().addChild<UIWidgets::CoinQueue>();
-	coinQueueWidget->bind(core()->eventBroker());
+	auto hudWidget = _ui.rootWidget().addChild<UIWidgets::HUD>();
+	hudWidget->bind(core()->eventBroker());
 
 	auto teamPickerWidget = _ui.rootWidget().addChild<UIWidgets::TeamPicker>();
 	teamPickerWidget->bind(core()->eventBroker());
@@ -89,6 +91,14 @@ void MainState::onEvent(const Cinnabar::EventBroker::Event* event)
 	{
 		onEvent(event->as<CoinInsertEvent>());
 	}
+	else if(event->is<DepartmentSelectEvent>())
+	{
+		onEvent(event->as<DepartmentSelectEvent>());
+	}
+	else if(event->is<DepartmentDeselectEvent>())
+	{
+		onEvent(event->as<DepartmentDeselectEvent>());
+	}
 	else if(event->is<PuckBucketEvent>())
 	{
 		onEvent(event->as<PuckBucketEvent>());
@@ -102,14 +112,37 @@ void MainState::onEvent(const CoinInsertEvent& event)
 {
 	_coinQueue.push_back(event.coinType);
 }
+void MainState::onEvent(const DepartmentSelectEvent& event)
+{
+	_department = event.department;
+}
+void MainState::onEvent(const DepartmentDeselectEvent& event)
+{
+	_department.clear();
+}
 void MainState::onEvent(const PuckBucketEvent& event)
 {
-	_showingResult = true;
+	auto& db = Database::getSingleton();
+	const int coinMultiplier = [](CoinType coinType) -> int
+	{
+		switch(coinType)
+		{
+			case CoinType::Penny: return 25;
+			case CoinType::Nickel: return 10;
+			case CoinType::Dime: return 5;
+			case CoinType::Quarter: return 1;
+		}
+		return 1;
+	}(event.coinType);
+	const int points = event.bucketValue * coinMultiplier;
+	db.givePoints(_department, points);
 
-	core()->eventBroker().emit(VideoPlayRequestEvent{
-		"resources/video/rickroll.mp4",
-		false
-	});
+	//_showingResult = true;
+
+	//core()->eventBroker().emit(VideoPlayRequestEvent{
+	//	"resources/video/rickroll.mp4",
+	//	false
+	//});
 }
 void MainState::onEvent(const VideoEndEvent& event)
 {
@@ -124,6 +157,8 @@ void MainState::mousePressed(const SDL_MouseButtonEvent& event)
 		_ui.mousePress(event.x, event.y);
 		return;
 	}
+	if(_department.empty())
+		return;
 	if(!_coinQueue.empty())
 	{
 		_placing = true;

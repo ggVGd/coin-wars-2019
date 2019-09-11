@@ -14,15 +14,16 @@ public:
 	~Database();
 	static Database& getSingleton();
 
-	void createDepartment(const char* name);
-	void givePoints(const char* department, int points);
+	void createDepartment(const std::string& name);
+	void givePoints(const std::string& department, int points);
 
 	struct DepartmentPoints
 	{
 		std::string department;
 		int points;
 	};
-	std::vector<DepartmentPoints> getPoints();
+	const std::vector<DepartmentPoints>& getPoints();
+	int getPoints(const std::string&);
 
 private:
 	sqlite3* _db;

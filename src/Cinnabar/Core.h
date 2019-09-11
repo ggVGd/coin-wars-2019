@@ -13,7 +13,15 @@ namespace Cinnabar
 
 	class Core
 	{
+		Core(const Core&) = delete;
+		Core& operator==(const Core&) = delete;
+
+		static Core* _instance;
 	public:
+		Core();
+		~Core();
+		static Core* getSingleton();
+
 		void init();
 		void shutdown();
 

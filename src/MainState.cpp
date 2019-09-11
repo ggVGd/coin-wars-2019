@@ -6,6 +6,8 @@
 #include "Cinnabar/Texture.h"
 #include "Events.h"
 #include "Settings.h"
+#include "UIWidgets/CoinQueue.h"
+#include "UIWidgets/TeamPicker.h"
 #include <GL/gl.h>
 
 #define PUCK_RADIUS Settings::get<float>("puck_radius")
@@ -17,6 +19,7 @@ void MainState::enter()
 {
 	core()->eventBroker().addObserver(this);
 	subscribe<CoinInsertEvent>();
+	//subscribe<DepartmentSelectEvent>();
 	subscribe<PuckBucketEvent>();
 	subscribe<VideoEndEvent>();
 
@@ -29,7 +32,13 @@ void MainState::enter()
 	input->mouseMoved.subscribe(this, std::bind(&MainState::mouseMoved, this, std::placeholders::_1));
 
 	auto nanovg = core()->module<Cinnabar::NanoVGModule>();
-	nanovg->setCanvas(this);
+	nanovg->setCanvas(&_ui);
+
+	auto coinQueueWidget = _ui.rootWidget().addChild<UIWidgets::CoinQueue>();
+	coinQueueWidget->bind(core()->eventBroker());
+
+	auto teamPickerWidget = _ui.rootWidget().addChild<UIWidgets::TeamPicker>();
+	teamPickerWidget->bind(core()->eventBroker());
 }
 void MainState::leave()
 {
@@ -74,28 +83,6 @@ void MainState::update(float elapsed)
 		_board->update(elapsed);
 	}
 }
-void MainState::drawNanoVG()
-{
-	//nvgBeginPath(nvg());
-	//nvgRect(nvg(), 100, 100, 200, 200);
-	//nvgFillColor(nvg(), nvgRGBA(255, 255, 255, 105));
-	//nvgFill(nvg());
-
-	nvgFontSize(nvg(), 20.0f);
-	nvgFontFaceId(nvg(), nvgFindFont(nvg(), "OpenSans-Regular"));
-	nvgTextAlign(nvg(), NVG_ALIGN_LEFT);
-	nvgFontBlur(nvg(), 0);
-	nvgFillColor(nvg(), nvgRGBA(255, 255, 255, 255));
-
-	int y = 0;
-	for(const auto& coin : _coinQueue)
-	{
-		char text[16];
-		sprintf(text, "Coin %d", static_cast<uint8_t>(coin));
-		nvgText(nvg(), 10, 10 + y, text, nullptr);
-		y += 20;
-	}
-}
 void MainState::onEvent(const Cinnabar::EventBroker::Event* event)
 {
 	if(event->is<CoinInsertEvent>())
@@ -130,19 +117,26 @@ void MainState::onEvent(const VideoEndEvent& event)
 }
 void MainState::mousePressed(const SDL_MouseButtonEvent& event)
 {
+	auto renderModule = core()->module<Cinnabar::RenderModule>();
+	const auto windowH = renderModule->windowSize().y;
+	if(_ui.mouseInside(event.x, event.y))
+	{
+		_ui.mousePress(event.x, event.y);
+		return;
+	}
 	if(!_coinQueue.empty())
 	{
 		_placing = true;
 		auto coinType = _coinQueue.front();
 		_coinQueue.pop_front();
 
-		auto renderModule = core()->module<Cinnabar::RenderModule>();
-		const auto windowH = renderModule->windowSize().y;
 		_board->beginPlace(coinType);
 		_board->setPlacingPosition({
 			event.x - PUCK_RADIUS,
 			windowH - event.y - PUCK_RADIUS
 		});
+
+		core()->eventBroker().emit(CoinConsumeEvent{ coinType });
 	}
 }
 void MainState::mouseReleased(const SDL_MouseButtonEvent& event)

@@ -5,12 +5,12 @@
 #include "Events.h"
 #include "Scene.h"
 #include "SceneRenderer.h"
+#include "UI.h"
 #include <SDL2/SDL_events.h>
 #include <deque>
 
 class MainState
 	: public Cinnabar::State,
-	public Cinnabar::NanoVGModule::Canvas,
 	Cinnabar::EventBroker::Observer
 
 {
@@ -20,8 +20,6 @@ public:
 	void leave() override;
 	void render() override;
 	void update(float) override;
-
-	void drawNanoVG() override;
 
 	void onEvent(const Cinnabar::EventBroker::Event*) override;
 	void onEvent(const CoinInsertEvent&);
@@ -41,4 +39,6 @@ private:
 	std::deque<CoinType> _coinQueue;
 
 	bool _showingResult = false;
+
+	UI _ui;
 };

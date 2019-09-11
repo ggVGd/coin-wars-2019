@@ -7,6 +7,20 @@ struct CoinInsertEvent
 	CoinType coinType;
 };
 
+struct CoinConsumeEvent
+{
+	CoinType coinType;
+};
+
+struct DepartmentSelectEvent
+{
+	std::string department;
+};
+
+struct DepartmentDeselectEvent
+{
+};
+
 struct PuckBucketEvent
 {
 	int bucketValue;

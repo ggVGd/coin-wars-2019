@@ -1,6 +1,6 @@
 #pragma once
-#include <map>
 #include <string>
+#include <vector>
 
 struct sqlite3;
 struct sqlite3_stmt;
@@ -16,7 +16,13 @@ public:
 
 	void createDepartment(const char* name);
 	void givePoints(const char* department, int points);
-	std::map<std::string, int> getPoints();
+
+	struct DepartmentPoints
+	{
+		std::string department;
+		int points;
+	};
+	std::vector<DepartmentPoints> getPoints();
 
 private:
 	sqlite3* _db;
@@ -25,7 +31,7 @@ private:
 	sqlite3_stmt* _stmtGetPoints;
 
 	bool _pointCacheValid;
-	std::map<std::string, int> _pointCache;
+	std::vector<DepartmentPoints> _pointCache;
 
 	void _init();
 	void _handleError(int);

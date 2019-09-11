@@ -1,4 +1,5 @@
 #pragma once
+#include "Math/Vector2.h"
 #include "Module.h"
 #include "ThirdParty/nanovg/nanovg.h"
 
@@ -25,13 +26,15 @@ namespace Cinnabar
 	{
 	public:
 		virtual ~Canvas() = default;
-		virtual void drawNanoVG() = 0;
+		virtual void render() = 0;
 
 	protected:
 		NVGcontext* nvg() const;
+		Cinnabar::Vector2 size() const;
 
 	private:
 		NVGcontext* _nvg;
+		Cinnabar::Vector2 _size;
 		friend class NanoVGModule;
 	};
 }

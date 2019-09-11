@@ -69,7 +69,7 @@ void Board::update(float elapsed)
 			);
 		}
 
-		if(body->GetPosition().y < bucket_height)
+		if(body->GetPosition().y < bucket_height * PHYSICS_SCALE)
 		{
 			auto bodyData = static_cast<BodyData*>(body->GetUserData());
 			bodyData->bucketTimer += elapsed;

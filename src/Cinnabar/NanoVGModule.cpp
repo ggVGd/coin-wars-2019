@@ -44,7 +44,8 @@ namespace Cinnabar
 		nvgBeginFrame(_ctx, windowSize.x, windowSize.y, 1);
 		nvgShapeAntiAlias(_ctx, true);
 
-		_canvas->drawNanoVG();
+		_canvas->_size = windowSize;
+		_canvas->render();
 
 		nvgEndFrame(_ctx);
 	}
@@ -58,5 +59,9 @@ namespace Cinnabar
 	NVGcontext* NanoVGModule::Canvas::nvg() const
 	{
 		return _nvg;
+	}
+	Cinnabar::Vector2 NanoVGModule::Canvas::size() const
+	{
+		return _size;
 	}
 }

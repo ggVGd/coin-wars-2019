@@ -46,16 +46,16 @@ void Database::givePoints(const char* department, int points)
 
 	_pointCacheValid = false;
 }
-std::map<std::string, int> Database::getPoints()
+std::vector<Database::DepartmentPoints> Database::getPoints()
 {
 	if(!_pointCacheValid)
 	{
 		_pointCache.clear();
 		while(sqlite3_step(_stmtGetPoints) == SQLITE_ROW)
 		{
-			const char* department = reinterpret_cast<const char*>(sqlite3_column_text(_stmtGetPoints, 0));
+			const std::string department(reinterpret_cast<const char*>(sqlite3_column_text(_stmtGetPoints, 0)));
 			const int points = sqlite3_column_int(_stmtGetPoints, 1);
-			_pointCache[department] = points;
+			_pointCache.push_back({ department, points });
 		}
 		_handleError(sqlite3_reset(_stmtGetPoints));
 		_pointCacheValid = true;
@@ -102,6 +102,7 @@ void Database::_init()
 		FROM department d
 		INNER JOIN department_points dp ON d.id = dp.department_id
 		GROUP BY d.name
+		ORDER BY 2 DESC
 	)", -1, &_stmtGetPoints, nullptr));
 }
 void Database::_handleError(int rc)

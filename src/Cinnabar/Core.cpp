@@ -5,6 +5,22 @@
 
 namespace Cinnabar
 {
+	Core* Core::_instance = nullptr;
+
+	Core::Core()
+	{
+		if(_instance)
+			throw std::runtime_error("There can only be one Cinnabar::Core.");
+		_instance = this;
+	}
+	Core::~Core()
+	{
+		_instance = nullptr;
+	}
+	Core* Core::getSingleton()
+	{
+		return _instance;
+	}
 	void Core::init()
 	{
 		for(auto& module : _modules)

@@ -1,5 +1,6 @@
 #include "HUD.h"
 #include "../Database.h"
+#include "../Settings.h"
 
 namespace UIWidgets
 {
@@ -53,6 +54,26 @@ namespace UIWidgets
 					break;
 			}
 			y += 20;
+		}
+
+		nvgTextAlign(ctx(), NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
+		const auto& buckets = Settings::buckets();
+		const float bucket_height = Settings::get<float>("bucket_height");
+		const auto bucket_width = canvasSize().x / buckets.size();
+		for(std::size_t i = 0; i < buckets.size(); i++)
+		{
+			const auto& bucket = buckets.at(i);
+			const float x = (0.5f + i) * bucket_width;
+
+			if(!bucket.label.empty())
+			{
+				nvgFontSize(ctx(), 40.0f);
+				nvgText(ctx(), x, canvasSize().y - bucket_height + 30.0f, bucket.label.c_str(), nullptr);
+			}
+
+			std::string text = "x" + std::to_string(bucket.multiplier);
+			nvgFontSize(ctx(), 60.0f);
+			nvgText(ctx(), x, canvasSize().y - bucket_height + 90.0f, text.c_str(), nullptr);
 		}
 	}
 	bool HUD::mouseInside(int x, int y)

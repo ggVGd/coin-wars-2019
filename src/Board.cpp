@@ -80,6 +80,7 @@ void Board::update(float elapsed)
 
 	const float bucket_area_height = Settings::get<float>("bucket_area_height") * PHYSICS_SCALE;
 	const float bucket_height = Settings::get<float>("bucket_height");
+	const float bucket_width = _size.x / Settings::buckets().size();
 	const float bucket_time = Settings::get<float>("bucket_time");
 
 	std::vector<b2Body*> bodiesToDelete;
@@ -118,8 +119,10 @@ void Board::update(float elapsed)
 				_scene.removeSprite(bodyData->sprite);
 			}
 
+			auto bucketIndex = (int)floor(body->GetPosition().x / PHYSICS_SCALE / bucket_width);
+
 			Cinnabar::Core::getSingleton()->eventBroker().emit(PuckBucketEvent{
-				1,
+				bucketIndex,
 				bodyData->coinType
 			});
 
@@ -308,8 +311,8 @@ void Board::_setupBoard()
 	_createWall(_size.x, 0, _size.x, _size.y, false);
 	
 	const float bucket_height = Settings::get<float>("bucket_height");
-	const float bucket_width = Settings::get<float>("bucket_width");
-	for(int i = 0; i < 30; i++)
+	const float bucket_width = _size.x / Settings::buckets().size();
+	for(int i = 1; i < Settings::buckets().size(); i++)
 	{
 		_createWall(
 			i * bucket_width, 0,

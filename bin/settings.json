@@ -2,7 +2,39 @@
 	"bucket_area_height" : 200.0,
 	"bucket_height" : 100.0,
 	"bucket_time" : 2.0,
-	"bucket_width" : 150.0,
+	"buckets" : [
+		{
+			"multiplier": 100
+		},
+		{
+			"multiplier": 500
+		},
+		{
+			"multiplier": 1000
+		},
+		{
+			"multiplier" : 0,
+			"effect" : "rickroll",
+			"label" : "Bonus Roll"
+		},
+		{
+			"multiplier" : 10000
+		},
+		{
+			"multiplier" : 0,
+			"effect" : "rickroll",
+			"label" : "Bonus Roll"
+		},
+		{
+			"multiplier": 1000
+		},
+		{
+			"multiplier": 500
+		},
+		{
+			"multiplier": 100
+		}
+	],
 
 	"peg_radius": 20.0,
 	"peg_spacing_x" : 110.0,

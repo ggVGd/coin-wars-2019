@@ -80,10 +80,13 @@ void MainState::render()
 }
 void MainState::update(float elapsed)
 {
-	if(!_showingResult)
-	{
-		_board->update(elapsed);
-	}
+	if(_showingResult)
+		return;
+
+	if(_department.empty())
+		return;
+
+	_board->update(elapsed);
 }
 void MainState::onEvent(const Cinnabar::EventBroker::Event* event)
 {
@@ -137,12 +140,12 @@ void MainState::onEvent(const PuckBucketEvent& event)
 	const int points = event.bucketValue * coinMultiplier;
 	db.givePoints(_department, points);
 
-	//_showingResult = true;
+	_showingResult = true;
 
-	//core()->eventBroker().emit(VideoPlayRequestEvent{
-	//	"resources/video/rickroll.mp4",
-	//	false
-	//});
+	core()->eventBroker().emit(VideoPlayRequestEvent{
+		"resources/video/rickroll.mp4",
+		false
+	});
 }
 void MainState::onEvent(const VideoEndEvent& event)
 {

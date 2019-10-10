@@ -11,6 +11,8 @@ namespace UIWidgets
 	public:
 		void bind(Cinnabar::EventBroker&);
 		void render() override;
+		bool mouseInside(int x, int y) override;
+		bool mousePress(int x, int y) override;
 
 		void onEvent(const Cinnabar::EventBroker::Event*) override;
 		void onEvent(const CoinInsertEvent&);

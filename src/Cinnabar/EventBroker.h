@@ -41,6 +41,7 @@ namespace Cinnabar
 		virtual ~Observer();
 		virtual void onEvent(const Event*) = 0;
 	protected:
+		EventBroker* eventBroker() const;
 		void subscribe(EventType);
 		void unsubscribe(EventType);
 

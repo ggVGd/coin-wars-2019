@@ -39,6 +39,10 @@ namespace Cinnabar
 			_broker->removeObserver(this);
 		}
 	}
+	EventBroker* EventBroker::Observer::eventBroker() const
+	{
+		return _broker;
+	}
 	void EventBroker::Observer::subscribe(EventType type)
 	{
 		_broker->subscribe(this, type);

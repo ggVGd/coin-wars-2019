@@ -23,7 +23,7 @@ struct DepartmentDeselectEvent
 
 struct PuckBucketEvent
 {
-	int bucketValue;
+	int bucketIndex;
 	CoinType coinType;
 };
 

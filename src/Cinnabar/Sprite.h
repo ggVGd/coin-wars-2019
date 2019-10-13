@@ -56,7 +56,7 @@ namespace Cinnabar
 		glm::vec2 _position;
 		int _zIndex;
 		float _rotation = 0.0f;
-		glm::vec2 _size;
+		glm::vec2 _size = {0, 0};
 		glm::ivec2 _sheetSize = {1, 1};
 		int _sheetTile = 0;
 	};

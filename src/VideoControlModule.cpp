@@ -89,11 +89,12 @@ void VideoControlModule::open(const std::string& filename, bool loop)
 		execv("/usr/bin/mpv", (char**)argv);
 		exit(0);
 
-		delete argv;
+		delete[] argv;
 	}
 	else
 	{
 		_playerOpen = true;
+		_pollTimer = -1.0f;
 	}
 }
 void VideoControlModule::play()

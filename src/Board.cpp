@@ -248,11 +248,14 @@ void Board::_createWall(float x1, float y1, float x2, float y2, bool withSprite)
 
 	if(withSprite)
 	{
+		const float length = (Cinnabar::Vector2(x1, y1) - Cinnabar::Vector2(x2, y2)).length();
+
 		auto sprite = std::make_shared<Cinnabar::Sprite>();
 		sprite->setTexture(_wallTexture);
-		sprite->setSize(100.0f, 10.0f);
+		sprite->setSize(length, 10.0f);
 		sprite->setPosition((x1 + x2) * 0.5f, (y1 + y2) * 0.5f);
 		sprite->setCenteredPosition(true);
+		sprite->setZIndex(50);
 	
 		const auto v = Cinnabar::Vector2(x2 - x1, y2 - y1).normalizedCopy();
 		const float angle = atan2(v.y, v.x) - atan2(0, 1);
@@ -278,9 +281,10 @@ void Board::_setupBoard()
 		return col == width - 1;
 	};
 
-	for(int row = 0, y = peg_area_bottom; y <= peg_area_top; row++, y += peg_spacing_y)
+	int row = 0, col = 0;
+	for(int y = peg_area_bottom; y <= peg_area_top; row++, y += peg_spacing_y)
 	{
-		for(int col = 0; !isLastCol(row, col - 1); col++)
+		for(col = 0; !isLastCol(row, col - 1); col++)
 		{
 			const float x = margin_x + col * peg_spacing_x + (row % 2) * peg_spacing_x * 0.5f;
 			_createPeg(x, y, Settings::get<float>("peg_radius"));
@@ -304,6 +308,14 @@ void Board::_setupBoard()
 				previousWallPeg[3] = y;
 			}
 		}
+	}
+
+	if(row % 2 == 0)
+	{
+		const float x = margin_x + col * peg_spacing_x + peg_spacing_x * 0.5f;
+		const float y = peg_area_bottom + peg_spacing_y * (floor((peg_area_top - peg_area_bottom) / peg_spacing_y) + 1);
+		_createWall(previousWallPeg[0], previousWallPeg[1], 0, y);
+		_createWall(previousWallPeg[2], previousWallPeg[3], x, y);
 	}
 
 	_createWall(0, 0, 0, _size.y, false);

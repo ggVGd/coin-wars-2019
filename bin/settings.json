@@ -4,13 +4,16 @@
 	"bucket_time" : 2.0,
 	"buckets" : [
 		{
-			"multiplier": 100
+			"multiplier": 100,
+			"sizeFactor" : 2
 		},
 		{
-			"multiplier": 500
+			"multiplier": 500,
+			"sizeFactor" : 2
 		},
 		{
-			"multiplier": 1000
+			"multiplier": 1000,
+			"sizeFactor" : 2
 		},
 		{
 			"multiplier" : 0,
@@ -26,13 +29,16 @@
 			"label" : "Bonus Roll"
 		},
 		{
-			"multiplier": 1000
+			"multiplier": 1000,
+			"sizeFactor" : 2
 		},
 		{
-			"multiplier": 500
+			"multiplier": 500,
+			"sizeFactor" : 2
 		},
 		{
-			"multiplier": 100
+			"multiplier": 100,
+			"sizeFactor" : 2
 		}
 	],
 

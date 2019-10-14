@@ -59,11 +59,14 @@ namespace UIWidgets
 		nvgTextAlign(ctx(), NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM);
 		const auto& buckets = Settings::buckets();
 		const float bucket_height = Settings::get<float>("bucket_height");
-		const auto bucket_width = canvasSize().x / buckets.size();
+		const auto bucket_width = canvasSize().x / Settings::bucketSizeFactors();
+		float x0 = 0, x1 = 0;
 		for(std::size_t i = 0; i < buckets.size(); i++)
 		{
 			const auto& bucket = buckets.at(i);
-			const float x = (0.5f + i) * bucket_width;
+			x1 = x0 + bucket_width * bucket.sizeFactor;
+			const float x = (x0 + x1) * 0.5f;
+			x0 = x1;
 
 			if(!bucket.label.empty())
 			{
@@ -71,8 +74,8 @@ namespace UIWidgets
 				nvgText(ctx(), x, canvasSize().y - bucket_height + 30.0f, bucket.label.c_str(), nullptr);
 			}
 
-			std::string text = "x" + std::to_string(bucket.multiplier);
-			nvgFontSize(ctx(), 60.0f);
+			std::string text = std::to_string(bucket.multiplier);
+			nvgFontSize(ctx(), 50.0f);
 			nvgText(ctx(), x, canvasSize().y - bucket_height + 90.0f, text.c_str(), nullptr);
 		}
 	}

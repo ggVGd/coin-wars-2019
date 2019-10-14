@@ -7,6 +7,8 @@ static void from_json(const json& json, Settings::Bucket& bucket)
 {
 	if(json.contains("multiplier"))
 		bucket.multiplier = json["multiplier"].get<int>();
+	if(json.contains("sizeFactor"))
+		bucket.sizeFactor = json["sizeFactor"].get<int>();
 	if(json.contains("effect"))
 		bucket.effect = json["effect"].get<std::string>();
 	if(json.contains("label"))

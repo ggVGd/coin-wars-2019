@@ -2,6 +2,7 @@
 #include "Cinnabar/EventBroker.h"
 #include "Cinnabar/Module.h"
 #include "Enumerations.h"
+#include "ASerial.h"
 
 class CoinControlModule
 	: public Cinnabar::Module<CoinControlModule>,
@@ -17,4 +18,5 @@ public:
 
 private:
 	void _emitCoinInsert(CoinType);
+	ASerial *serialPort;
 };

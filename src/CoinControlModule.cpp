@@ -6,13 +6,22 @@ void CoinControlModule::init()
 {
 	core()->eventBroker().addObserver(this);
 	subscribe<SDL_Event>();
+	serialPort = new ASerial("/dev/ttyACM0");
 }
 void CoinControlModule::shutdown()
 {
+	delete serialPort;
 }
 void CoinControlModule::update(float)
 {
-	// TODO: poll for coin events from Arduino
+	CoinType coin = CoinType::Invalid;
+	while(serialPort->canRead())
+	{
+		coin = serialPort->getCommand();
+		printf("coin=%d\n", (int)coin);
+		if(coin != CoinType::Invalid)
+			_emitCoinInsert(coin);
+	}
 }
 void CoinControlModule::onEvent(const Cinnabar::EventBroker::Event* event)
 {

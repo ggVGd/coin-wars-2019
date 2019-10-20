@@ -52,6 +52,11 @@
 	"coin_3_value" : 5,
 	"coin_4_value" : 1,
 
+	"teamPicker_rowHeight" : 30.0,
+	"teamPicker_rowSpacing" : 10.0,
+	"teamPicker_rowPadding" : 5.0,
+	"teamPicker_padding" : 20.0,
+
 	"peg_radius": 20.0,
 	"peg_spacing_x" : 110.0,
 	"peg_spacing_y" : 110.0,

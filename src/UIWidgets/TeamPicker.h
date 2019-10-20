@@ -20,5 +20,16 @@ namespace UIWidgets
 
 	private:
 		bool _visible = true;
+
+		struct Geometry
+		{
+			float rowHeight;
+			float rowSpacing;
+			float rowPadding;
+			float padding;
+			Cinnabar::Vector2 dialogPosition;
+			Cinnabar::Vector2 dialogSize;
+		};
+		Geometry _calculateGeometry();
 	};
 }

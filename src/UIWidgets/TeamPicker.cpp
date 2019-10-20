@@ -2,13 +2,7 @@
 #include "../Cinnabar/Core.h"
 #include "../Cinnabar/ThirdParty/nanovg/nanovg.h"
 #include "../Database.h"
-
-#define GEOMETRY \
-	const Cinnabar::Vector2 dialogSize(500, 500); \
-	const Cinnabar::Vector2 dialogPosition = canvasSize() * 0.5f - dialogSize * 0.5f; \
-	const float rowHeight = 40.0f; \
-	const float rowSpacing = 10.0f; \
-	const float padding = 20.0f;
+#include "../Settings.h"
 
 namespace UIWidgets
 {
@@ -33,10 +27,10 @@ namespace UIWidgets
 		if(!_visible)
 			return;
 
-		GEOMETRY
+		auto g = _calculateGeometry();
 
 		nvgBeginPath(ctx());
-		nvgRect(ctx(), dialogPosition.x, dialogPosition.y, dialogSize.x, dialogSize.y);
+		nvgRect(ctx(), g.dialogPosition.x, g.dialogPosition.y, g.dialogSize.x, g.dialogSize.y);
 		nvgFillColor(ctx(), nvgRGBA(0, 0, 0, 200));
 		nvgFill(ctx());
 		nvgStrokeColor(ctx(), nvgRGBA(255, 255, 255, 255));
@@ -44,12 +38,12 @@ namespace UIWidgets
 
 		nvgFontSize(ctx(), 40.0f);
 		nvgFontFaceId(ctx(), nvgFindFont(ctx(), "OpenSans-Bold"));
-		nvgTextAlign(ctx(), NVG_ALIGN_CENTER);
+		nvgTextAlign(ctx(), NVG_ALIGN_TOP | NVG_ALIGN_CENTER);
 		nvgFontBlur(ctx(), 0);
 		nvgFillColor(ctx(), nvgRGBA(255, 255, 255, 255));
-		nvgText(ctx(), canvasSize().x * 0.5f, dialogPosition.y + 60.0f, "Pick Your Department", nullptr);
+		nvgText(ctx(), canvasSize().x * 0.5f, g.dialogPosition.y + 10.0f, "Pick Your Department", nullptr);
 
-		nvgFontSize(ctx(), 30.0f);
+		nvgFontSize(ctx(), g.rowHeight - g.rowPadding * 2.0f);
 		nvgFontFaceId(ctx(), nvgFindFont(ctx(), "OpenSans-Regular"));
 		nvgFontBlur(ctx(), 0);
 
@@ -59,19 +53,19 @@ namespace UIWidgets
 		{
 			const auto points = std::to_string(item.points);
 
-			const float rowY = dialogPosition.y + 100.0f + row * (rowHeight + rowSpacing);
+			const float rowY = g.dialogPosition.y + 60.0f + row * (g.rowHeight + g.rowSpacing);
 
 			nvgBeginPath(ctx());
-			nvgRect(ctx(), dialogPosition.x + padding, rowY, dialogSize.x - padding * 2.0f, rowHeight);
+			nvgRect(ctx(), g.dialogPosition.x + g.padding, rowY, g.dialogSize.x - g.padding * 2.0f, g.rowHeight);
 			nvgFillColor(ctx(), nvgRGBA(255, 255, 255, 100));
 			nvgFill(ctx());
 
 			nvgFillColor(ctx(), nvgRGBA(255, 255, 255, 255));
 			nvgTextAlign(ctx(), NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-			nvgText(ctx(), dialogPosition.x + padding * 2.0f, rowY + rowHeight * 0.5f, item.department.c_str(), nullptr);
+			nvgText(ctx(), g.dialogPosition.x + g.padding * 2.0f, rowY + g.rowHeight * 0.5f, item.department.c_str(), nullptr);
 
 			nvgTextAlign(ctx(), NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
-			nvgText(ctx(), dialogPosition.x + dialogSize.x - padding * 2.0f, rowY + rowHeight * 0.5f, points.c_str(), nullptr);
+			nvgText(ctx(), g.dialogPosition.x + g.dialogSize.x - g.padding * 2.0f, rowY + g.rowHeight * 0.5f, points.c_str(), nullptr);
 
 			row++;
 		}
@@ -81,26 +75,26 @@ namespace UIWidgets
 		if(!_visible)
 			return false;
 
-		GEOMETRY
+		auto g = _calculateGeometry();
 
-		return x >= dialogPosition.x
-			&& x <= dialogPosition.x + dialogSize.x
-			&& y >= dialogPosition.y
-			&& y <= dialogPosition.y + dialogSize.y;
+		return x >= g.dialogPosition.x
+			&& x <= g.dialogPosition.x + g.dialogSize.x
+			&& y >= g.dialogPosition.y
+			&& y <= g.dialogPosition.y + g.dialogSize.y;
 	}
 	bool TeamPicker::mousePress(int x, int y)
 	{
 		if(!_visible)
 			return false;
 
-		GEOMETRY
+		auto g = _calculateGeometry();
 
 		auto& db = Database::getSingleton();
 		int row = 0;
 		for(auto item : db.getPoints())
 		{
-			const float rowY = dialogPosition.y + 100.0f + row * (rowHeight + rowSpacing);
-			if(y >= rowY && y <= rowY + rowHeight)
+			const float rowY = g.dialogPosition.y + 60.0f + row * (g.rowHeight + g.rowSpacing);
+			if(y >= rowY && y <= rowY + g.rowHeight)
 			{
 				_visible = false;
 				Cinnabar::Core::getSingleton()->eventBroker().emit<DepartmentSelectEvent>({ item.department });
@@ -109,5 +103,21 @@ namespace UIWidgets
 			row++;
 		}
 		return false;
+	}
+	TeamPicker::Geometry TeamPicker::_calculateGeometry()
+	{
+		const int rows = Database::getSingleton().getPoints().size();
+
+		Geometry geometry;
+
+		geometry.rowHeight = Settings::get<float>("teamPicker_rowHeight");
+		geometry.rowSpacing = Settings::get<float>("teamPicker_rowSpacing");
+		geometry.rowPadding = Settings::get<float>("teamPicker_rowPadding");
+		geometry.padding = Settings::get<float>("teamPicker_padding");
+
+		geometry.dialogSize = { 500, 80 + rows * (geometry.rowHeight + geometry.rowSpacing) };
+		geometry.dialogPosition = canvasSize() * 0.5f - geometry.dialogSize * 0.5f;
+
+		return geometry;
 	}
 }

@@ -38,21 +38,10 @@ namespace UIWidgets
 		int y = 0;
 		for(const auto& coin : _coinQueue)
 		{
-			switch(coin)
-			{
-				case CoinType::Penny:
-					nvgText(ctx(), 10, 40 + y, "Penny", nullptr);
-					break;
-				case CoinType::Nickel:
-					nvgText(ctx(), 10, 40 + y, "Nickel", nullptr);
-					break;
-				case CoinType::Dime:
-					nvgText(ctx(), 10, 40 + y, "Dime", nullptr);
-					break;
-				case CoinType::Quarter:
-					nvgText(ctx(), 10, 40 + y, "Quarter", nullptr);
-					break;
-			}
+			const auto coinText = Settings::coinText(coin);
+			const auto coinValue = Settings::coinValue(coin);
+			const auto text = coinText + " (x" + std::to_string(coinValue) + ")";
+			nvgText(ctx(), 10, 40 + y, text.c_str(), nullptr);
 			y += 20;
 		}
 

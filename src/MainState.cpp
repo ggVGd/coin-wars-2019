@@ -127,17 +127,7 @@ void MainState::onEvent(const PuckBucketEvent& event)
 {
 	auto& db = Database::getSingleton();
 	const auto& bucket = Settings::buckets()[event.bucketIndex];
-	const int coinMultiplier = [](CoinType coinType) -> int
-	{
-		switch(coinType)
-		{
-			case CoinType::Penny: return 25;
-			case CoinType::Nickel: return 10;
-			case CoinType::Dime: return 5;
-			case CoinType::Quarter: return 1;
-		}
-		return 1;
-	}(event.coinType);
+	const int coinMultiplier = Settings::coinValue(event.coinType);
 	const int points = bucket.multiplier * coinMultiplier;
 	db.givePoints(_department, points);
 

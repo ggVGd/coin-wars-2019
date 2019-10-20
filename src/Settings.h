@@ -1,4 +1,5 @@
 #pragma once
+#include "Enumerations.h"
 #include <nlohmann/json.hpp>
 
 class Settings
@@ -47,6 +48,18 @@ public:
 			index++;
 		}
 		return -1;
+	}
+
+	inline static std::string coinText(CoinType coinType)
+	{
+		int n = static_cast<std::underlying_type<CoinType>::type>(coinType);
+		return getSingleton()._data["coin_" + std::to_string(n) + "_text"].get<std::string>();
+	}
+
+	inline static int coinValue(CoinType coinType)
+	{
+		int n = static_cast<std::underlying_type<CoinType>::type>(coinType);
+		return getSingleton()._data["coin_" + std::to_string(n) + "_value"].get<int>();
 	}
 
 private:

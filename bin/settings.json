@@ -4,43 +4,53 @@
 	"bucket_time" : 2.0,
 	"buckets" : [
 		{
-			"multiplier": 100,
+			"multiplier": 1,
 			"sizeFactor" : 2
 		},
 		{
-			"multiplier": 500,
+			"multiplier": 5,
 			"sizeFactor" : 2
 		},
 		{
-			"multiplier": 1000,
+			"multiplier": 10,
 			"sizeFactor" : 2
 		},
 		{
 			"multiplier" : 0,
 			"effect" : "rickroll",
-			"label" : "Bonus Roll"
+			"label" : "Bonus"
 		},
 		{
-			"multiplier" : 10000
+			"multiplier" : 100
 		},
 		{
 			"multiplier" : 0,
 			"effect" : "rickroll",
-			"label" : "Bonus Roll"
+			"label" : "Bonus"
 		},
 		{
-			"multiplier": 1000,
+			"multiplier": 10,
 			"sizeFactor" : 2
 		},
 		{
-			"multiplier": 500,
+			"multiplier": 5,
 			"sizeFactor" : 2
 		},
 		{
-			"multiplier": 100,
+			"multiplier": 1,
 			"sizeFactor" : 2
 		}
 	],
+
+	"coin_1_text" : "Penny",
+	"coin_2_text" : "Nickel",
+	"coin_3_text" : "Dime",
+	"coin_4_text" : "Quarter",
+
+	"coin_1_value" : 25,
+	"coin_2_value" : 10,
+	"coin_3_value" : 5,
+	"coin_4_value" : 1,
 
 	"peg_radius": 20.0,
 	"peg_spacing_x" : 110.0,

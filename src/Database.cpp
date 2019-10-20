@@ -7,15 +7,6 @@ Database::Database()
 	sqlite3_open("data.db", &_db);
 
 	_init();
-
-	createDepartment("QWERTY");
-	createDepartment("ASDFGH");
-	createDepartment("ZXCVBN");
-
-	givePoints("QWERTY", 123);
-	givePoints("ASDFGH", 123);
-	givePoints("QWERTY", 123);
-	givePoints("QWERTY", 123);
 }
 Database::~Database()
 {

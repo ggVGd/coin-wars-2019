@@ -49,15 +49,27 @@ namespace UIWidgets
 
 		auto& db = Database::getSingleton();
 		int row = 0;
+		float maxPoints = -1.0f;
 		for(auto item : db.getPoints())
 		{
 			const auto points = std::to_string(item.points);
 
 			const float rowY = g.dialogPosition.y + 60.0f + row * (g.rowHeight + g.rowSpacing);
+			const float width = (g.dialogSize.x - g.padding * 2.0f);
+			const float barWidth = [&]() -> float {
+				if(maxPoints < 0.0f)
+					maxPoints = item.points;
+				return (item.points / maxPoints) * width;
+			}();
 
 			nvgBeginPath(ctx());
-			nvgRect(ctx(), g.dialogPosition.x + g.padding, rowY, g.dialogSize.x - g.padding * 2.0f, g.rowHeight);
+			nvgRect(ctx(), g.dialogPosition.x + g.padding, rowY, width, g.rowHeight);
 			nvgFillColor(ctx(), nvgRGBA(255, 255, 255, 100));
+			nvgFill(ctx());
+
+			nvgBeginPath(ctx());
+			nvgRect(ctx(), g.dialogPosition.x + g.padding, rowY, barWidth, g.rowHeight);
+			nvgFillColor(ctx(), nvgRGBA(0, 30, 55, 200));
 			nvgFill(ctx());
 
 			nvgFillColor(ctx(), nvgRGBA(255, 255, 255, 255));

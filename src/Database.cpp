@@ -101,7 +101,7 @@ void Database::_init()
 	_handleError(sqlite3_prepare_v2(_db, R"(
 		SELECT d.name, SUM(dp.points)
 		FROM department d
-		INNER JOIN department_points dp ON d.id = dp.department_id
+		LEFT JOIN department_points dp ON d.id = dp.department_id
 		GROUP BY d.name
 		ORDER BY 2 DESC
 	)", -1, &_stmtGetPoints, nullptr));

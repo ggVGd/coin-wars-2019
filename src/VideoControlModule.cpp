@@ -50,6 +50,11 @@ void VideoControlModule::onEvent(const VideoPlayRequestEvent& event)
 }
 void VideoControlModule::onEvent(const VideoStopRequestEvent& event)
 {
+	stop();
+}
+bool VideoControlModule::isPlayerOpen() const
+{
+	return _playerOpen;
 }
 void VideoControlModule::open(const std::string& filename, bool loop)
 {

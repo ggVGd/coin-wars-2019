@@ -4,6 +4,7 @@
 #include "Cinnabar/RenderModule.h"
 #include "CoinControlModule.h"
 #include "MainState.h"
+#include "ScreenSaverModule.h"
 #include "VideoControlModule.h"
 
 int main(int argc, char** argv)
@@ -13,6 +14,7 @@ int main(int argc, char** argv)
 	core.addModule<Cinnabar::InputModule>();
 	core.addModule<Cinnabar::NanoVGModule>();
 	core.addModule<CoinControlModule>();
+	core.addModule<ScreenSaverModule>();
 	core.addModule<VideoControlModule>();
 
 	core.init();

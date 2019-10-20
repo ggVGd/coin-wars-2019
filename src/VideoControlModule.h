@@ -18,6 +18,7 @@ public:
 	void onEvent(const VideoPlayRequestEvent&);
 	void onEvent(const VideoStopRequestEvent&);
 
+	bool isPlayerOpen() const;
 	void open(const std::string& filename, bool loop = false);
 	void play();
 	void pause();

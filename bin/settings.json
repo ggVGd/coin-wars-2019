@@ -52,6 +52,8 @@
 	"coin_3_value" : 5,
 	"coin_4_value" : 1,
 
+	"screenSaverTime" : 300,
+
 	"teamPicker_rowHeight" : 30.0,
 	"teamPicker_rowSpacing" : 10.0,
 	"teamPicker_rowPadding" : 5.0,

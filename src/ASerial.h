@@ -5,12 +5,15 @@
 
 class ASerial
 {
+	ASerial(const ASerial&) = delete;
+	ASerial& operator=(const ASerial&) = delete;
 public: 
-	ASerial(std::string deviceName);
-	~ASerial();
+	ASerial() = default;
+	~ASerial() = default;
+
 	bool canRead();
 	CoinType getCommand();
-	void openPort();
+	bool openPort(const std::string& deviceName);
 	void closePort();
 
 

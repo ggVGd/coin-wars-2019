@@ -18,5 +18,5 @@ public:
 
 private:
 	void _emitCoinInsert(CoinType);
-	ASerial *serialPort;
+	ASerial serialPort;
 };

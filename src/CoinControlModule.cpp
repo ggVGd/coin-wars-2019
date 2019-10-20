@@ -6,18 +6,18 @@ void CoinControlModule::init()
 {
 	core()->eventBroker().addObserver(this);
 	subscribe<SDL_Event>();
-	serialPort = new ASerial("/dev/ttyACM0");
+	serialPort.openPort("/dev/ttyACM0");
 }
 void CoinControlModule::shutdown()
 {
-	delete serialPort;
+	serialPort.closePort();
 }
 void CoinControlModule::update(float)
 {
 	CoinType coin = CoinType::Invalid;
-	while(serialPort->canRead())
+	while(serialPort.canRead())
 	{
-		coin = serialPort->getCommand();
+		coin = serialPort.getCommand();
 		printf("coin=%d\n", (int)coin);
 		if(coin != CoinType::Invalid)
 			_emitCoinInsert(coin);

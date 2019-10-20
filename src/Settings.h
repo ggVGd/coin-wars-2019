@@ -39,9 +39,14 @@ public:
 	inline static int bucketIndex(int slot)
 	{
 		std::size_t index = 0;
-		for(; slot > 0 && index < buckets().size(); index++)
+		while(slot >= 0 && index < buckets().size())
+		{
 			slot -= buckets().at(index).sizeFactor;
-		return index;
+			if(slot < 0)
+				return index;
+			index++;
+		}
+		return -1;
 	}
 
 private:

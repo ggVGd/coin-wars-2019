@@ -37,7 +37,7 @@ Board::Board(const Cinnabar::Vector2& size)
 
 	_placingPuckSprite = std::make_shared<Cinnabar::Sprite>();
 	_placingPuckSprite->setSize(PUCK_RADIUS * 2.0f, PUCK_RADIUS * 2.0f);
-	_placingPuckSprite->setTexture(_puckTexture);
+	_placingPuckSprite->setTexture(_puckTextures[0]);
 	_placingPuckSprite->setPosition(-1000, -1000);
 	_scene.sprites.push_back(_placingPuckSprite);
 }
@@ -137,6 +137,7 @@ void Board::beginPlace(CoinType coinType)
 {
 	_placing = true;
 	_placingCoinType = coinType;
+	_placingPuckSprite->setTexture(_puckTextures[static_cast<std::underlying_type<CoinType>::type>(coinType)]);
 }
 void Board::setPlacingPosition(glm::vec2 position)
 {
@@ -154,7 +155,8 @@ void Board::endPlace()
 		auto body = _createPuck(
 			_placingPuckSprite->position().x + PUCK_RADIUS,
 			_placingPuckSprite->position().y + PUCK_RADIUS,
-			PUCK_RADIUS
+			PUCK_RADIUS,
+			_placingCoinType
 		);
 		auto bodyData = static_cast<BodyData*>(body->GetUserData());
 		bodyData->coinType = _placingCoinType;
@@ -170,8 +172,12 @@ void Board::_loadResources()
 	_pegTexture = std::make_shared<Cinnabar::Texture>();
 	_pegTexture->load("resources/textures/peg.png");
 
-	_puckTexture = std::make_shared<Cinnabar::Texture>();
-	_puckTexture->load("resources/textures/puck.png");
+	_puckTextures.resize(5);
+	for(int i = 0; i < 5; i++)
+	{
+		_puckTextures[i] = std::make_shared<Cinnabar::Texture>();
+		_puckTextures[i]->load("resources/textures/puck_" + std::to_string(i) + ".png");
+	}
 
 	_wallTexture = std::make_shared<Cinnabar::Texture>();
 	_wallTexture->load("resources/textures/wall.png");
@@ -184,7 +190,7 @@ void Board::_setupBackground()
 	sprite->setZIndex(-100);
 	_scene.sprites.push_back(sprite);
 }
-b2Body* Board::_createPuck(float x, float y, float radius)
+b2Body* Board::_createPuck(float x, float y, float radius, CoinType coinType)
 {
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
@@ -204,7 +210,7 @@ b2Body* Board::_createPuck(float x, float y, float radius)
 	auto sprite = std::make_shared<Cinnabar::Sprite>();
 	sprite->setSize(radius * 2.0f, radius * 2.0f);
 	sprite->setZIndex(100);
-	sprite->setTexture(_puckTexture);
+	sprite->setTexture(_puckTextures[static_cast<std::underlying_type<CoinType>::type>(coinType)]);
 	_scene.sprites.push_back(sprite);
 
 	auto bodyData = new BodyData;

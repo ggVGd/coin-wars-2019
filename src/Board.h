@@ -35,7 +35,7 @@ private:
 
 	std::shared_ptr<Cinnabar::Texture> _backgroundTexture;
 	std::shared_ptr<Cinnabar::Texture> _pegTexture;
-	std::shared_ptr<Cinnabar::Texture> _puckTexture;
+	std::vector<std::shared_ptr<Cinnabar::Texture>> _puckTextures;
 	std::shared_ptr<Cinnabar::Texture> _wallTexture;
 
 	bool _placing = false;
@@ -44,7 +44,7 @@ private:
 
 	void _loadResources();
 	void _setupBackground();
-	b2Body* _createPuck(float x, float y, float radius);
+	b2Body* _createPuck(float x, float y, float radius, CoinType coinType);
 	void _createPeg(float x, float y, float radius);
 	void _createWall(float x1, float y1, float x2, float y2, bool withSprite = true);
 	void _setupBoard();

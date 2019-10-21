@@ -119,12 +119,14 @@ void Board::update(float elapsed)
 				_scene.removeSprite(bodyData->sprite);
 			}
 
-			auto bucketSlot = (int)floor(body->GetPosition().x / PHYSICS_SCALE / bucket_width);
-			auto bucketIndex = Settings::bucketIndex(bucketSlot);
+			const auto position = Cinnabar::Vector2(body->GetPosition().x, body->GetPosition().y) / PHYSICS_SCALE;
+			const auto bucketSlot = (int)floor(position.x / bucket_width);
+			const auto bucketIndex = Settings::bucketIndex(bucketSlot);
 
 			Cinnabar::Core::getSingleton()->eventBroker().emit(PuckBucketEvent{
 				bucketIndex,
-				bodyData->coinType
+				bodyData->coinType,
+				position
 			});
 
 			delete bodyData;

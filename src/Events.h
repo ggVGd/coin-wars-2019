@@ -1,4 +1,5 @@
 #pragma once
+#include "Cinnabar/Math/Vector2.h"
 #include "Enumerations.h"
 #include <string>
 
@@ -21,10 +22,17 @@ struct DepartmentDeselectEvent
 {
 };
 
+struct GivePointsEvent
+{
+	Cinnabar::Vector2 position;
+	int points;
+};
+
 struct PuckBucketEvent
 {
 	int bucketIndex;
 	CoinType coinType;
+	Cinnabar::Vector2 puckPosition;
 };
 
 struct VideoPlayRequestEvent

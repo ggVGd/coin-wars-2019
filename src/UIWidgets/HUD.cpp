@@ -11,6 +11,21 @@ namespace UIWidgets
 		subscribe<CoinConsumeEvent>();
 		subscribe<DepartmentSelectEvent>();
 		subscribe<DepartmentDeselectEvent>();
+		subscribe<GivePointsEvent>();
+	}
+	void HUD::update(float elapsed)
+	{
+		const auto flyingTextSpeed = Cinnabar::Vector2(0, -30.0f) * elapsed;
+
+		for(auto it = _flyingTexts.begin(); it != _flyingTexts.end();)
+		{
+			it->timer += elapsed;
+			it->position += flyingTextSpeed;
+			if(it->timer >= it->maxTimer)
+				it = _flyingTexts.erase(it);
+			else
+				it++;
+		}
 	}
 	void HUD::render()
 	{
@@ -67,6 +82,16 @@ namespace UIWidgets
 			nvgFontSize(ctx(), 50.0f);
 			nvgText(ctx(), x, canvasSize().y - bucket_height + 90.0f, text.c_str(), nullptr);
 		}
+
+		nvgFontFaceId(ctx(), nvgFindFont(ctx(), "OpenSans-Bold"));
+		nvgTextAlign(ctx(), NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+		nvgFontSize(ctx(), 40.0f);
+		for(const auto& flyingText : _flyingTexts)
+		{
+			const float scale = 1.0f - flyingText.timer / flyingText.maxTimer;
+			nvgFillColor(ctx(), nvgRGBA(255, 255, 255, scale * 255));
+			nvgText(ctx(), flyingText.position.x, flyingText.position.y, flyingText.text.c_str(), nullptr);
+		}
 	}
 	bool HUD::mouseInside(int x, int y)
 	{
@@ -101,6 +126,10 @@ namespace UIWidgets
 		{
 			onEvent(event->as<DepartmentDeselectEvent>());
 		}
+		else if(event->is<GivePointsEvent>())
+		{
+			onEvent(event->as<GivePointsEvent>());
+		}
 	}
 	void HUD::onEvent(const CoinInsertEvent& event)
 	{
@@ -117,5 +146,23 @@ namespace UIWidgets
 	void HUD::onEvent(const DepartmentDeselectEvent& event)
 	{
 		_department.clear();
+	}
+	void HUD::onEvent(const GivePointsEvent& event)
+	{
+		if(event.points <= 0)
+			return;
+
+		const auto text = "+" + std::to_string(event.points);
+		const Cinnabar::Vector2 position(
+			event.position.x,
+			canvasSize().y - event.position.y
+		);
+
+		_flyingTexts.push_back({
+			0.0f,
+			2.0f,
+			position,
+			text
+		});
 	}
 }

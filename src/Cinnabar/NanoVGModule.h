@@ -26,6 +26,7 @@ namespace Cinnabar
 	{
 	public:
 		virtual ~Canvas() = default;
+		virtual void update(float) = 0;
 		virtual void render() = 0;
 
 	protected:

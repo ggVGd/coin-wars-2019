@@ -11,6 +11,9 @@ namespace UIWidgets
 	class UIWidget
 	{
 	public:
+		void _update(float elapsed);
+		inline virtual void update(float){}
+
 		void _render();
 		virtual void render() = 0;
 

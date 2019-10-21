@@ -4,6 +4,10 @@ NVGcontext* UI::ctx() const
 {
 	return nvg();
 }
+void UI::update(float elapsed)
+{
+	_rootWidget._update(elapsed);
+}
 void UI::render()
 {
 	_rootWidget._ui = this;

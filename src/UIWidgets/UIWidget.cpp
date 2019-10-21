@@ -3,6 +3,16 @@
 
 namespace UIWidgets
 {
+	void UIWidget::_update(float elapsed)
+	{
+		update(elapsed);
+		for(auto child : _children)
+		{
+			child->_ui = _ui;
+			child->_parent = this;
+			child->_update(elapsed);
+		}
+	}
 	void UIWidget::_render()
 	{
 		render();

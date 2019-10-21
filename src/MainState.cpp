@@ -131,6 +131,11 @@ void MainState::onEvent(const PuckBucketEvent& event)
 	const int points = bucket.multiplier * coinMultiplier;
 	db.givePoints(_department, points);
 
+	eventBroker()->emit(GivePointsEvent{
+		event.puckPosition,
+		points
+	});
+
 	if(bucket.effect == "rickroll")
 	{
 		_showingResult = true;

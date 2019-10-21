@@ -30,8 +30,10 @@ namespace Cinnabar
 	{
 		nvgDeleteGLES2(_ctx);
 	}
-	void NanoVGModule::update(float)
+	void NanoVGModule::update(float elapsed)
 	{
+		if(_canvas)
+			_canvas->update(elapsed);
 	}
 	void NanoVGModule::render()
 	{

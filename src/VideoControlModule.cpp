@@ -18,18 +18,30 @@ void VideoControlModule::shutdown()
 }
 void VideoControlModule::update(float elapsed)
 {
-	if(!_playerOpen)
+	if(!_playerOpen && !_playerOpening)
 		return;
 
 	_pollTimer += elapsed;
-	if(_pollTimer > 1.0f)
+	if(_pollTimer > 0.5f)
 	{
 		_pollTimer = 0.0f;
 		std::string status = _sendCommand({ "client_name" });
-		if(status.empty())
+		if(_playerOpening)
 		{
-			_playerOpen = false;
-			core()->eventBroker().emit(VideoEndEvent());
+			if(!status.empty())
+			{
+				_playerOpen = true;
+				_playerOpening = false;
+			}
+		}
+		else
+		{
+			if(status.empty())
+			{
+				_playerOpen = false;
+				_playerOpening = false;
+				core()->eventBroker().emit(VideoEndEvent());
+			}
 		}
 	}
 }
@@ -54,7 +66,7 @@ void VideoControlModule::onEvent(const VideoStopRequestEvent& event)
 }
 bool VideoControlModule::isPlayerOpen() const
 {
-	return _playerOpen;
+	return _playerOpen || _playerOpening;
 }
 void VideoControlModule::open(const std::string& filename, bool loop)
 {
@@ -98,8 +110,7 @@ void VideoControlModule::open(const std::string& filename, bool loop)
 	}
 	else
 	{
-		_playerOpen = true;
-		_pollTimer = -1.0f;
+		_playerOpening = true;
 	}
 }
 void VideoControlModule::play()

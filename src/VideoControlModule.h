@@ -31,4 +31,5 @@ private:
 
 	float _pollTimer = 0.0f;
 	bool _playerOpen = false;
+	bool _playerOpening = false;
 };

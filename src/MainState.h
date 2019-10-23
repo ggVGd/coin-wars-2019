@@ -3,6 +3,7 @@
 #include "Cinnabar/NanoVGModule.h"
 #include "Cinnabar/State.h"
 #include "Events.h"
+#include "RandomVideo.h"
 #include "Scene.h"
 #include "SceneRenderer.h"
 #include "UI.h"
@@ -45,4 +46,5 @@ private:
 	bool _showingResult = false;
 
 	UI _ui;
+	RandomVideo _randomVideo;
 };

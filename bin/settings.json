@@ -17,7 +17,7 @@
 		},
 		{
 			"multiplier" : 0,
-			"effect" : "rickroll",
+			"effect" : "video",
 			"label" : "Bonus"
 		},
 		{
@@ -25,7 +25,7 @@
 		},
 		{
 			"multiplier" : 0,
-			"effect" : "rickroll",
+			"effect" : "video",
 			"label" : "Bonus"
 		},
 		{
@@ -52,7 +52,7 @@
 	"coin_3_value" : 5,
 	"coin_4_value" : 1,
 
-	"screenSaverTime" : 300,
+	"screenSaverTime" : 3,
 
 	"teamPicker_rowHeight" : 30.0,
 	"teamPicker_rowSpacing" : 10.0,

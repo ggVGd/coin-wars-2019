@@ -136,11 +136,12 @@ void MainState::onEvent(const PuckBucketEvent& event)
 		points
 	});
 
-	if(bucket.effect == "rickroll")
+	if(bucket.effect == "video")
 	{
 		_showingResult = true;
+
 		core()->eventBroker().emit(VideoPlayRequestEvent{
-			"resources/video/rickroll.mp4",
+			_randomVideo.get(),
 			false
 		});
 	}

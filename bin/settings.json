@@ -52,6 +52,8 @@
 	"coin_3_value" : 5,
 	"coin_4_value" : 1,
 
+	"hideCursor" : true,
+
 	"screenSaverTime" : 300,
 
 	"teamPicker_rowHeight" : 30.0,

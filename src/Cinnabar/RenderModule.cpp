@@ -33,8 +33,6 @@ namespace Cinnabar
 
 		_glContext = SDL_GL_CreateContext(_window);
 
-		//SDL_ShowCursor(false);
-
 		SDL_GL_SetSwapInterval(1);
 
 		glewExperimental = GL_TRUE;

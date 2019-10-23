@@ -5,6 +5,7 @@
 #include "CoinControlModule.h"
 #include "MainState.h"
 #include "ScreenSaverModule.h"
+#include "Settings.h"
 #include "VideoControlModule.h"
 
 int main(int argc, char** argv)
@@ -18,6 +19,9 @@ int main(int argc, char** argv)
 	core.addModule<VideoControlModule>();
 
 	core.init();
+
+	if(Settings::get<bool>("hideCursor"))
+		SDL_ShowCursor(false);
 
 	core.pushState<MainState>();
 

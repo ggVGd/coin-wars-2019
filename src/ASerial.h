@@ -1,5 +1,4 @@
 #pragma once
-
 #include <string>
 #include "Enumerations.h"
 
@@ -16,9 +15,7 @@ public:
 	bool openPort(const std::string& deviceName);
 	void closePort();
 
-
 private: 
-	std::string _deviceName;
 	int _fileDescriptor = -1; // indicate unopened state (will be non-negative if opened)
 };
 

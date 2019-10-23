@@ -49,7 +49,7 @@ bool ASerial::openPort(const std::string& deviceName)
 		return false;
 	}
 
-	int fd = open(_deviceName.c_str(), O_RDONLY | O_NOCTTY);
+	int fd = open(deviceName.c_str(), O_RDONLY | O_NOCTTY);
 
 	if (fd < 0)
 	{

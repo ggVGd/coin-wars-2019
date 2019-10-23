@@ -18,7 +18,7 @@
 		{
 			"multiplier" : 0,
 			"effect" : "video",
-			"label" : "Bonus"
+			"label" : "BONUS"
 		},
 		{
 			"multiplier" : 100
@@ -26,7 +26,7 @@
 		{
 			"multiplier" : 0,
 			"effect" : "video",
-			"label" : "Bonus"
+			"label" : "BONUS"
 		},
 		{
 			"multiplier": 10,
@@ -52,7 +52,7 @@
 	"coin_3_value" : 5,
 	"coin_4_value" : 1,
 
-	"screenSaverTime" : 3,
+	"screenSaverTime" : 300,
 
 	"teamPicker_rowHeight" : 30.0,
 	"teamPicker_rowSpacing" : 10.0,

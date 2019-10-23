@@ -74,18 +74,25 @@ namespace UIWidgets
 
 			if(!bucket.label.empty())
 			{
-				nvgFontSize(ctx(), 40.0f);
-				nvgText(ctx(), x, canvasSize().y - bucket_height + 30.0f, bucket.label.c_str(), nullptr);
+				nvgFontFaceId(ctx(), nvgFindFont(ctx(), "OpenSans-Bold"));
+				nvgFontSize(ctx(), 25.0f);
+				for(int c = bucket.label.size() - 1, y = 0; c >= 0; c--, y += 18.0f)
+				{
+					nvgText(ctx(), x, canvasSize().y - 12.0f - y, bucket.label.data() + c, bucket.label.data() + c + 1);
+				}
 			}
-
-			std::string text = std::to_string(bucket.multiplier);
-			nvgFontSize(ctx(), 50.0f);
-			nvgText(ctx(), x, canvasSize().y - bucket_height + 90.0f, text.c_str(), nullptr);
+			else
+			{
+				std::string text = std::to_string(bucket.multiplier);
+				nvgFontFaceId(ctx(), nvgFindFont(ctx(), "OpenSans-Regular"));
+				nvgFontSize(ctx(), 50.0f);
+				nvgText(ctx(), x, canvasSize().y - bucket_height + 90.0f, text.c_str(), nullptr);
+			}
 		}
 
 		nvgFontFaceId(ctx(), nvgFindFont(ctx(), "OpenSans-Bold"));
 		nvgTextAlign(ctx(), NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-		nvgFontSize(ctx(), 40.0f);
+		nvgFontSize(ctx(), 60.0f);
 		for(const auto& flyingText : _flyingTexts)
 		{
 			const float scale = 1.0f - flyingText.timer / flyingText.maxTimer;

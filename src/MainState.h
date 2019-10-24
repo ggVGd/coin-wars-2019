@@ -34,7 +34,7 @@ public:
 	void mouseMoved(const SDL_MouseMotionEvent&);
 
 private:
-	Board* _board;
+	std::shared_ptr<Board> _board;
 
 	std::string _department;
 
@@ -42,6 +42,7 @@ private:
 	glm::vec2 _placingPosition;
 
 	std::deque<CoinType> _coinQueue;
+	int _coinsDropping = 0;
 
 	bool _showingResult = false;
 

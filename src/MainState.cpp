@@ -26,7 +26,7 @@ void MainState::enter()
 	subscribe<VideoEndEvent>();
 
 	auto render = core()->module<Cinnabar::RenderModule>();
-	_board = new Board(render->windowSize());
+	_board = std::make_shared<Board>(render->windowSize());
 
 	auto input = core()->module<Cinnabar::InputModule>();
 	input->mousePressed.subscribe(this, std::bind(&MainState::mousePressed, this, std::placeholders::_1));
@@ -83,9 +83,6 @@ void MainState::update(float elapsed)
 	if(_showingResult)
 		return;
 
-	if(_department.empty())
-		return;
-
 	_board->update(elapsed);
 }
 void MainState::onEvent(const Cinnabar::EventBroker::Event* event)
@@ -136,6 +133,12 @@ void MainState::onEvent(const PuckBucketEvent& event)
 		points
 	});
 
+	_coinsDropping--;
+	if(_coinsDropping == 0)
+	{
+		core()->eventBroker().emit(DepartmentDeselectEvent());
+	}
+
 	if(bucket.effect == "video")
 	{
 		_showingResult = true;
@@ -166,6 +169,7 @@ void MainState::mousePressed(const SDL_MouseButtonEvent& event)
 		_placing = true;
 		auto coinType = _coinQueue.front();
 		_coinQueue.pop_front();
+		_coinsDropping++;
 
 		_board->beginPlace(coinType);
 		_board->setPlacingPosition({

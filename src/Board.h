@@ -10,8 +10,6 @@ class Board : Cinnabar::EventBroker::Observer
 {
 public:
 	Board(const Cinnabar::Vector2& size);
-	void bind();
-	void unbind();
 
 	void onEvent(const Cinnabar::EventBroker::Event*) override;
 	void onEvent(const DepartmentSelectEvent&);

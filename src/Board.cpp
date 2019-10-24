@@ -40,15 +40,10 @@ Board::Board(const Cinnabar::Vector2& size)
 	_placingPuckSprite->setTexture(_puckTextures[0]);
 	_placingPuckSprite->setPosition(-1000, -1000);
 	_scene.sprites.push_back(_placingPuckSprite);
-}
-void Board::bind()
-{
+
 	Cinnabar::Core::getSingleton()->eventBroker().addObserver(this);
 	subscribe<DepartmentSelectEvent>();
 	subscribe<DepartmentDeselectEvent>();
-}
-void Board::unbind()
-{
 }
 void Board::onEvent(const Cinnabar::EventBroker::Event* event)
 {
@@ -76,6 +71,9 @@ void Board::render(const glm::mat4& MVP)
 }
 void Board::update(float elapsed)
 {
+	if(_department.empty())
+		return;
+
 	_physicsWorld.Step(elapsed, 8, 3);
 
 	const float bucket_area_height = Settings::get<float>("bucket_area_height") * PHYSICS_SCALE;

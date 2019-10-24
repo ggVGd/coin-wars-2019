@@ -78,7 +78,7 @@ namespace UIWidgets
 				nvgFontSize(ctx(), 25.0f);
 				for(int c = bucket.label.size() - 1, y = 0; c >= 0; c--, y += 18.0f)
 				{
-					nvgText(ctx(), x, canvasSize().y - 12.0f - y, bucket.label.data() + c, bucket.label.data() + c + 1);
+					nvgText(ctx(), x, canvasSize().y - 4.0f - y, bucket.label.data() + c, bucket.label.data() + c + 1);
 				}
 			}
 			else
